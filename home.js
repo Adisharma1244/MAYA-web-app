@@ -2,6 +2,8 @@
 const input = document.getElementById("input");
 const chat = document.getElementById("chat");
 const welcome = document.getElementById("welcome");
+const sendBtn = document.getElementById("sendBtn");
+
 
 // Add message to UI
 function addMessage(text, sender) {
@@ -22,8 +24,17 @@ function addMessage(text, sender) {
   chat.scrollTop = chat.scrollHeight;
 }
 
+sendBtn.addEventListener("click", function () {
+  sendMessage();
+});
 // Send message to API
 async function sendMessage() {
+  let userId = localStorage.getItem("maya_user_id");
+
+if (!userId) {
+  userId = "user_" + Math.random().toString(36).substr(2, 9);
+  localStorage.setItem("maya_user_id", userId);
+} 
   const userText = input.value.trim();
   if (!userText) return;
 
@@ -36,10 +47,10 @@ async function sendMessage() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        user_id: "1",
-        message: userText
-      }),
+     body: JSON.stringify({
+  user_id: userId,
+  message: userText
+})
     });
 
     const data = await response.json();
